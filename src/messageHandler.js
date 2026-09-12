@@ -1,6 +1,7 @@
 const aiEngine = require('./ai/aiEngine');
 const aiMemory = require('./ai/aiMemory');
 const aiCommands = require('./commands/aiCommands');
+const rpgCommands = require('./rpg/rpgCommands');
 const logger = require('./utils/logger');
 const config = require('./config/config');
 
@@ -141,6 +142,36 @@ class MessageHandler {
       return aiCommands.handleClearContext(groupId, isAdmin);
     }
 
+    // RPG Commands
+    if (command === 'start') {
+      return rpgCommands.handleStart(sender);
+    }
+
+    if (command === 'select') {
+      return rpgCommands.handleSelect(args, sender);
+    }
+
+    if (command === 'profile') {
+      return rpgCommands.handleProfile(sender);
+    }
+
+    if (command === 'daily') {
+      return rpgCommands.handleDaily(sender);
+    }
+
+    if (command === 'rankings') {
+      return rpgCommands.handleRankings(args);
+    }
+
+    if (command === 'balance') {
+      return rpgCommands.handleBalance(sender);
+    }
+
+    if (command === 'addxp') {
+      const isAdmin = this.checkAdmin(sender);
+      return rpgCommands.handleAddXP(args, sender, isAdmin);
+    }
+
     if (command === 'help') {
       return this.handleHelp(args);
     }
@@ -192,9 +223,14 @@ class MessageHandler {
 /ai [mode] - Change AI mode (normal, serious, chaotic, teacher, debate, factcheck, eli5)
 /memory [type] - View stored memories
 
-📚 **More coming soon!**
+👤 **RPG**
+/start - Create RPG profile
+/profile - View your profile
+/daily - Claim daily Ichi
+/rankings [type] - View leaderboards
+/balance - Check Ichi balance
 
-Use /help [category] for more info, Senpai.`;
+📚 Use /help [category] for more info, Senpai.`;
     }
 
     const category = args[0].toLowerCase();
@@ -209,9 +245,18 @@ Use /help [category] for more info, Senpai.`;
   • factcheck: Separate facts from claims
   • eli5: Simple explanations
 
-/memory [type] - View stored memories`,
+/memory [type] - View stored memories
+/clearcontext - Clear conversation context (admin only)`,
 
-      all: `All features coming soon, Senpai! 👀`,
+      rpg: `👤 **RPG Commands**
+/start - Create a new RPG profile
+/select [number] [username] - Select character and create profile
+/profile - View your profile card
+/daily - Claim daily Ichi reward
+/rankings [type] - View leaderboards (level/ichi/xp/achievements)
+/balance - Check your Ichi balance`,
+
+      all: `Use /help ai or /help rpg for detailed info, Senpai! 👀`,
     };
 
     return helpTexts[category] || helpTexts.all;
