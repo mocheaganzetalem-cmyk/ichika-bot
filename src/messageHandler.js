@@ -2,6 +2,7 @@ const aiEngine = require('./ai/aiEngine');
 const aiMemory = require('./ai/aiMemory');
 const aiCommands = require('./commands/aiCommands');
 const rpgCommands = require('./rpg/rpgCommands');
+const gameCommands = require('./games/gameCommands');
 const logger = require('./utils/logger');
 const config = require('./config/config');
 
@@ -172,6 +173,31 @@ class MessageHandler {
       return rpgCommands.handleAddXP(args, sender, isAdmin);
     }
 
+    // Game Commands
+    if (command === 'trivia') {
+      return gameCommands.handleTrivia(sender, groupId);
+    }
+
+    if (command === 'answer') {
+      return gameCommands.handleAnswer(args, sender, groupId);
+    }
+
+    if (command === 'guesstheanime') {
+      return gameCommands.handleGuessAnime(sender, groupId);
+    }
+
+    if (command === 'wordchain') {
+      return gameCommands.handleWordChain(sender, groupId);
+    }
+
+    if (command === 'hangman') {
+      return gameCommands.handleHangman(sender, groupId);
+    }
+
+    if (command === 'numberguess') {
+      return gameCommands.handleNumberGuess(sender, groupId);
+    }
+
     if (command === 'help') {
       return this.handleHelp(args);
     }
@@ -230,6 +256,14 @@ class MessageHandler {
 /rankings [type] - View leaderboards
 /balance - Check Ichi balance
 
+🎮 **GAMES**
+/trivia - Start trivia quiz
+/answer [A/B/C/D] - Submit trivia answer
+/guesstheanime - Guess anime by description
+/wordchain - Word chain game
+/hangman - Hangman game
+/numberguess - Guess the number
+
 📚 Use /help [category] for more info, Senpai.`;
     }
 
@@ -256,7 +290,15 @@ class MessageHandler {
 /rankings [type] - View leaderboards (level/ichi/xp/achievements)
 /balance - Check your Ichi balance`,
 
-      all: `Use /help ai or /help rpg for detailed info, Senpai! 👀`,
+      games: `🎮 **Game Commands**
+/trivia - Start anime trivia quiz (+50 XP, +25 Ichi for correct)
+/answer [A/B/C/D] - Submit your trivia answer
+/guesstheanime - Guess anime by hint
+/wordchain - Play word chain game
+/hangman - Classic hangman game
+/numberguess - Guess the hidden number (1-100)`,
+
+      all: `Use /help ai, /help rpg, or /help games for details, Senpai! 👀`,
     };
 
     return helpTexts[category] || helpTexts.all;
